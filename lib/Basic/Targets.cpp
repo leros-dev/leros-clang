@@ -22,6 +22,7 @@
 #include "Targets/Hexagon.h"
 #include "Targets/Lanai.h"
 #include "Targets/Le64.h"
+#include "Targets/Leros.h"
 #include "Targets/MSP430.h"
 #include "Targets/Mips.h"
 #include "Targets/NVPTX.h"
@@ -382,6 +383,16 @@ TargetInfo *AllocateTarget(const llvm::Triple &Triple,
     if (os == llvm::Triple::Linux)
       return new LinuxTargetInfo<RISCV64TargetInfo>(Triple, Opts);
     return new RISCV64TargetInfo(Triple, Opts);
+
+  case llvm::Triple::leros32:
+    if (os == llvm::Triple::Linux)
+      return new LinuxTargetInfo<Leros32TargetInfo>(Triple, Opts);
+    return new Leros32TargetInfo(Triple, Opts);
+  case llvm::Triple::leros64:
+    // TODO: add cases for FreeBSD, NetBSD, RTEMS once tested.
+    if (os == llvm::Triple::Linux)
+      return new LinuxTargetInfo<Leros64TargetInfo>(Triple, Opts);
+    return new Leros64TargetInfo(Triple, Opts);
 
   case llvm::Triple::sparc:
     switch (os) {
