@@ -12,6 +12,7 @@
 #include "CommonArgs.h"
 #include "InputInfo.h"
 #include "clang/Driver/Compilation.h"
+#include "clang/Driver/Options.h"
 #include "llvm/Option/ArgList.h"
 
 using namespace clang::driver;
@@ -33,9 +34,18 @@ void Leros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
                                  const InputInfoList &Inputs,
                                  const ArgList &Args,
                                  const char *LinkingOutput) const {
-
-  std::string Linker = getToolChain().GetProgramPath(getShortName());
+  const ToolChain &ToolChain = getToolChain();
+  std::string Linker = ToolChain.GetProgramPath(getShortName());
   ArgStringList CmdArgs;
+
+  bool WantCRTs =
+      !Args.hasArg(options::OPT_nostdlib, options::OPT_nostartfiles);
+
+  if (WantCRTs) {
+    CmdArgs.push_back(
+        Args.MakeArgString(ToolChain.GetFilePath("crt0.leros.o")));
+  }
+
   AddLinkerInputs(getToolChain(), Inputs, Args, CmdArgs, JA);
   CmdArgs.push_back("-o");
   CmdArgs.push_back(Output.getFilename());
