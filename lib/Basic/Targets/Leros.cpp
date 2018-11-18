@@ -43,12 +43,12 @@ ArrayRef<TargetInfo::GCCRegAlias> LerosTargetInfo::getGCCRegAliases() const {
 void LerosTargetInfo::getTargetDefines(const LangOptions &,
                                        MacroBuilder &Builder) const {
   Builder.defineMacro("__ELF__");
-  Builder.defineMacro("__Leros");
+  Builder.defineMacro("__leros__");
   bool Is64Bit = getTriple().getArch() == llvm::Triple::leros64;
-  Builder.defineMacro("__Leros_xlen", Is64Bit ? "64" : "32");
+  Builder.defineMacro("__leros_xlen__", Is64Bit ? "64" : "32");
   // TODO: modify when more code models and ABIs are supported.
-  Builder.defineMacro("__Leros_cmodel_medlow");
-  Builder.defineMacro("__Leros_float_abi_soft");
+  Builder.defineMacro("__leros_cmodel_medlow__");
+  Builder.defineMacro("__leros_float_abi_soft__");
 }
 
 /// Return true if has this feature, need to sync with handleTargetFeatures.
