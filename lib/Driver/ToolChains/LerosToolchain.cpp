@@ -29,6 +29,10 @@ Tool *LerosToolChain::buildLinker() const {
   return new tools::Leros::Linker(*this);
 }
 
+ToolChain::RuntimeLibType LerosToolChain::GetDefaultRuntimeLibType() const {
+  return ToolChain::RLT_CompilerRT;
+}
+
 void Leros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
                                  const InputInfo &Output,
                                  const InputInfoList &Inputs,
@@ -38,15 +42,20 @@ void Leros::Linker::ConstructJob(Compilation &C, const JobAction &JA,
   std::string Linker = ToolChain.GetProgramPath(getShortName());
   ArgStringList CmdArgs;
 
-  bool WantCRTs =
-      !Args.hasArg(options::OPT_nostdlib, options::OPT_nostartfiles);
-
-  if (WantCRTs) {
+  if (!Args.hasArg(options::OPT_nostdlib, options::OPT_nostartfiles)) {
     CmdArgs.push_back(
         Args.MakeArgString(ToolChain.GetFilePath("crt0.leros.o")));
   }
 
   AddLinkerInputs(getToolChain(), Inputs, Args, CmdArgs, JA);
+
+  if (!Args.hasArg(options::OPT_nostdlib, options::OPT_nodefaultlibs)) {
+
+    // Grab builints library from compiler-rt
+    // CmdArgs.push_back("-lc");
+    AddRunTimeLibs(ToolChain, ToolChain.getDriver(), CmdArgs, Args);
+  }
+
   CmdArgs.push_back("-o");
   CmdArgs.push_back(Output.getFilename());
   C.addCommand(llvm::make_unique<Command>(JA, *this, Args.MakeArgString(Linker),

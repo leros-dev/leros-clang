@@ -1,4 +1,5 @@
-//===--- Leros.h - Leros Tool and ToolChain Implementations ---------*- C++ -*-===//
+//===--- Leros.h - Leros Tool and ToolChain Implementations ---------*- C++
+//-*-===//
 //
 //                     The LLVM Compiler Infrastructure
 //
@@ -12,8 +13,8 @@
 
 #include "Gnu.h"
 #include "InputInfo.h"
-#include "clang/Driver/ToolChain.h"
 #include "clang/Driver/Tool.h"
+#include "clang/Driver/ToolChain.h"
 
 namespace clang {
 namespace driver {
@@ -22,9 +23,12 @@ namespace toolchains {
 class LLVM_LIBRARY_VISIBILITY LerosToolChain : public Generic_ELF {
 protected:
   Tool *buildLinker() const override;
+
 public:
   LerosToolChain(const Driver &D, const llvm::Triple &Triple,
-               const llvm::opt::ArgList &Args);
+                 const llvm::opt::ArgList &Args);
+
+  RuntimeLibType GetDefaultRuntimeLibType() const override;
 
   bool IsIntegratedAssemblerDefault() const override { return true; }
 };
