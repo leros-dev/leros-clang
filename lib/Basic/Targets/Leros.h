@@ -69,7 +69,7 @@ public:
     IntPtrType = SignedInt;
     PtrDiffType = SignedInt;
     SizeType = UnsignedInt;
-    resetDataLayout("E-m:e-p:32:32-i64:64-n32-S128");
+    resetDataLayout("E-m:e-p:32:32-i8:8:8-i16:32:32-i32:32:32-i64:64-n32-S128");
   }
 
   bool setABI(const std::string &Name) override {
@@ -85,9 +85,10 @@ class LLVM_LIBRARY_VISIBILITY Leros64TargetInfo : public LerosTargetInfo {
 public:
   Leros64TargetInfo(const llvm::Triple &Triple, const TargetOptions &Opts)
       : LerosTargetInfo(Triple, Opts) {
+    llvm_unreachable("64 bit Leros not yet supported");
     LongWidth = LongAlign = PointerWidth = PointerAlign = 64;
     IntMaxType = Int64Type = SignedLong;
-    resetDataLayout("E-m:e-p:64:64-i64:64-i128:128-n64-S128");
+    resetDataLayout("implement this");
   }
 
   bool setABI(const std::string &Name) override {
